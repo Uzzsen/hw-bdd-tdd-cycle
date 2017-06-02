@@ -1,7 +1,7 @@
 class MoviesController < ApplicationController
   
   def movie_params
-    params.require(:movie).permit(:title, :rating, :description, :release_date)
+    params.require(:movie).permit(:title, :rating, :description, :release_date, :director)
   end
 
   def show
@@ -60,5 +60,26 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
+
+#  def same_director
+#    @movie = Movie.find(params[:id])
+#    director =@movie.director   
+#   unless director.empty?
+#    @movies= Movie.director_movies director #Movie.where(director: @movie.director)
+#   else
+#    flash[:notice] = "'#{@movie.title}' has no director info"
+#    redirect_to movies_path
+#   end
+  def same_director
+     @movie = Movie.find(params[:id])    
+     @movies = Movie.same_director_movies(params[:id])
+    # debugger
+    unless @movies
+      flash[:notice] = "'#{@movie.title}' has no director info"
+      redirect_to movies_path
+    end
+  
+  end
+
 
 end
